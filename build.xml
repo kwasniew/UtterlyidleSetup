@@ -90,7 +90,7 @@
 
     </target>
 
-    <target name="build" description="build all">
+    <target name="build" description="build this app">
         <parallel>
             <antcall target="update"/>
             <antcall target="clean"/>
@@ -106,7 +106,7 @@
         <java fork="true" classname="Main" classpathref="all.jars"/>
     </target>
 
-    <target name="tarball" description="creates tarball with the application jar and all dependencies jars">
+    <target name="tarball" depends="build" description="creates tarball with the application jar and all dependencies jars">
         <tar destfile="${artifacts}/utterlyidle-setup-${build.number}.tar">
             <tarfileset dir="${runtime.dependencies.dir}" />
             <tarfileset dir="${artifacts}">
