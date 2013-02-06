@@ -28,4 +28,4 @@ else
   echo stopping all applications
 fi
 echo $portGrep
-ps -ef | grep Main | grep "$portGrep" | grep -v bash | grep -v grep | awk '{print $2}' | xargs kill
+ps -ef | grep MAIN_APP_CLASS | grep "$portGrep" | grep -v bash | grep -v grep | awk '{print $2}' | xargs kill

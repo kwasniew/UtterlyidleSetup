@@ -7,6 +7,7 @@
     <property name="reports" value="${artifacts}/reports"/>
     <property name="src" value="${basedir}/src"/>
     <property name="test" value="${basedir}/test"/>
+    <property name="scripts" value="${build}/release/scripts"/>
     <property name="release.version" value="${build.number}"/>
     <property name="release.name" value="${ant.project.name}-${release.version}"/>
     <property name="release.jar" value="${release.name}.jar"/>
@@ -14,6 +15,7 @@
     <property name="release.src" value="${release.name}-sources.jar"/>
     <property name="release.jar.path" value="${artifacts}/${release.jar}"/>
     <property name="release.tar" value="utterlyidle-setup-${build.number}.tar.gz"/>
+    <property name="scripts.tar" value="release-scripts.tar.gz"/>
     <property name="test.jar.path" value="${artifacts}/${release.name}.test.jar"/>
     <property name="build.dependencies.dir" value="lib/build"/>
     <property name="runtime.dependencies.dir" value="lib/runtime"/>
@@ -113,8 +115,21 @@
               src="${artifacts}/utterlyidle-setup-${build.number}.tar"/>
     </target>
 
-    <target name="deploy">
+    <target name="deploy" description="deploys app tarball">
         <ssh-copy-to-file file="${artifacts}/${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
+                          username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
+    </target>
+
+    <target name="scripts-tarball" description="creates a tarball with release scripts">
+        <tar destfile="${artifacts}/release-scripts.tar">
+            <tarfileset dir="${scripts}" />
+        </tar>
+        <gzip destfile="${artifacts}/release-scripts.tar.gz"
+              src="${artifacts}/release-scripts.tar"/>
+    </target>
+
+    <target name="deploy-scripts-tarball" depends="scripts-tarball" description="deploys release scripts tarball">
+        <ssh-copy-to-file file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" hostname="${ssh.hostname}"
                           username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
     </target>
 
