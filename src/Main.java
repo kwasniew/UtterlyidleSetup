@@ -9,6 +9,6 @@ public class Main extends RestApplication {
     }
 
     public static void main(String[] args) {
-        application().addAnnotated(MainResource.class).start();
+        application().addAnnotated(MainResource.class).start(8181);
     }
 }
