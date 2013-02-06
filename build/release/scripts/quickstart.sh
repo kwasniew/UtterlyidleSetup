@@ -1,0 +1,1 @@
+./start.sh -v current -p 8181
