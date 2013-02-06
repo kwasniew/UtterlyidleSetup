@@ -115,7 +115,7 @@
 
     <target name="deploy">
         <ssh-copy-to-file file="${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
-                          username="${ssh.username}" key="${ssh.key}"/>
+                          username="${ssh.username}" key="${ssh.key1}"/>
     </target>
 
 </project>
