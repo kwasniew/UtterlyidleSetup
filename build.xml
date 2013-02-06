@@ -114,8 +114,9 @@
     </target>
 
     <target name="deploy">
-        <ssh-copy-to-file file="${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
-                          username="${ssh.username}" key="${ssh.key1}"/>
+        <ssh-copy-to-file file="${artifacts}/${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
+                          username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
     </target>
 
 </project>
+
