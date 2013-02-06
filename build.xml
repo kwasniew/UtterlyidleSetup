@@ -19,7 +19,7 @@
     <property name="runtime.dependencies.dir" value="lib/runtime"/>
 
     <import file="${build}/commit/macros.xml"/>
-    <import file="${build}/release/macros.xml"/>
+    <import file="${build}/deploy/macros.xml"/>
     <import file="${build}/dependencies/shavenmaven.xml"/>
 
     <path id="all.dependancies">
@@ -114,8 +114,8 @@
     </target>
 
     <target name="deploy">
-        <ssh-copy-to-file file="${release.tar}" toDir="${toDir}" toFilename="${toFilename}" hostname="${hostname}"
-                          username="${username}" key="${key}"/>
+        <ssh-copy-to-file file="${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
+                          username="${ssh.username}" key="${ssh.key}"/>
     </target>
 
 </project>
