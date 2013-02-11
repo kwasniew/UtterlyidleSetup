@@ -19,10 +19,13 @@
     <property name="test.jar.path" value="${artifacts}/${release.name}.test.jar"/>
     <property name="build.dependencies.dir" value="lib/build"/>
     <property name="runtime.dependencies.dir" value="lib/runtime"/>
+    <property name="main.class" value="com.example.Main"/>
 
     <import file="${build}/commit/macros.xml"/>
     <import file="${build}/deploy/macros.xml"/>
     <import file="${build}/dependencies/shavenmaven.xml"/>
+
+    <requires java.version="1\.[67]"/>
 
     <path id="all.dependancies">
         <fileset dir="${build.dependencies.dir}" includes="**/*.jar"/>
@@ -101,7 +104,7 @@
     </target>
 
     <target name="run" depends="build" description="runs application on localhost">
-        <java fork="true" classname="Main" classpathref="all.jars"/>
+        <java fork="true" classname="com.example.Main" classpathref="all.jars"/>
     </target>
 
     <target name="tarball" depends="build" description="creates tarball with the application jar and all dependencies jars">
@@ -121,8 +124,12 @@
     </target>
 
     <target name="scripts-tarball" description="creates a tarball with release scripts">
+        <copy todir="${artifacts}/release-scripts" overwrite="true">
+            <fileset dir="${scripts}" />
+        </copy>
+        <replace dir="${artifacts}/release-scripts" token="MAIN_APP_CLASS" value="${main.class}" />
         <tar destfile="${artifacts}/release-scripts.tar">
-            <tarfileset dir="${scripts}" />
+            <tarfileset dir="${artifacts}/release-scripts" />
         </tar>
         <gzip destfile="${artifacts}/release-scripts.tar.gz"
               src="${artifacts}/release-scripts.tar"/>
@@ -130,6 +137,12 @@
 
     <target name="deploy-scripts-tarball" depends="scripts-tarball" description="deploys release scripts tarball">
         <ssh-copy-to-file file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" hostname="${ssh.hostname}"
+                          username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
+    </target>
+
+    <target name="extract-scripts-tarball"  description="extracts release scripts tarball">
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; mkdir -p @{toDir}" hostname="@{hostname}" username="@{username}" key="@{key}" passphrase="@{passphrase}"/>
+        <ssh-command file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" hostname="${ssh.hostname}"
                           username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
     </target>
 

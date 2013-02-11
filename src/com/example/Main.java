@@ -1,3 +1,5 @@
+package com.example;
+
 import com.googlecode.utterlyidle.BasePath;
 import com.googlecode.utterlyidle.RestApplication;
 
