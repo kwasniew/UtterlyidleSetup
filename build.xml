@@ -20,7 +20,7 @@
     <property name="build.dependencies.dir" value="lib/build"/>
     <property name="runtime.dependencies.dir" value="lib/runtime"/>
     <property name="main.class" value="com.example.Main"/>
-    <property name="build.properties" value="build.properties"/>
+    <property name="build.properties" value="build/environments/build.properties"/>
     <loadproperties srcfile="${build.properties}"/>
 
     <import file="${build}/commit/macros.xml"/>
