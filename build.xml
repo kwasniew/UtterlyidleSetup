@@ -169,7 +169,7 @@
 
     <target name="release" description="releases deployed app">
         <antcall target="extract-all"/>
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; rm previous; ln -s $(readlink current) previous; rm current; ln -s ${build.number} current;"
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; ./stop.sh; rm previous; ln -s $(readlink current) previous; rm current; ln -s ${build.number} current &amp;&amp; ./start.sh -v current -p ${ssh.port}"
                      hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
 
     </target>

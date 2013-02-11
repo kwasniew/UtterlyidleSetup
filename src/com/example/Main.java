@@ -11,6 +11,10 @@ public class Main extends RestApplication {
     }
 
     public static void main(String[] args) {
-        application().addAnnotated(MainResource.class).start(8181);
+        int port = 8181;
+        if(args.length > 0) {
+            port = Integer.parseInt(args[0]);
+        }
+        application().addAnnotated(MainResource.class).start(port);
     }
 }
