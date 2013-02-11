@@ -20,6 +20,8 @@
     <property name="build.dependencies.dir" value="lib/build"/>
     <property name="runtime.dependencies.dir" value="lib/runtime"/>
     <property name="main.class" value="com.example.Main"/>
+    <property name="build.properties" value="build.properties"/>
+    <loadproperties srcfile="${build.properties}"/>
 
     <import file="${build}/commit/macros.xml"/>
     <import file="${build}/deploy/macros.xml"/>
@@ -107,6 +109,8 @@
         <java fork="true" classname="com.example.Main" classpathref="all.jars"/>
     </target>
 
+
+    <!-- APP -->
     <target name="tarball" depends="build" description="creates tarball with the application jar and all dependencies jars">
         <tar destfile="${artifacts}/utterlyidle-setup-${build.number}.tar">
             <tarfileset dir="${runtime.dependencies.dir}" />
@@ -123,7 +127,9 @@
                           username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
     </target>
 
-    <target name="scripts-tarball" description="creates a tarball with release scripts">
+
+    <!-- SCRIPTS -->
+    <target name="package-scripts" description="creates a tarball package with release scripts">
         <copy todir="${artifacts}/release-scripts" overwrite="true">
             <fileset dir="${scripts}" />
         </copy>
@@ -135,15 +141,14 @@
               src="${artifacts}/release-scripts.tar"/>
     </target>
 
-    <target name="deploy-scripts-tarball" depends="scripts-tarball" description="deploys release scripts tarball">
+    <target name="deploy-scripts" depends="package-scripts" description="deploys release scripts tarball">
         <ssh-copy-to-file file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" hostname="${ssh.hostname}"
                           username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
     </target>
 
-    <target name="extract-scripts-tarball"  description="extracts release scripts tarball">
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; mkdir -p @{toDir}" hostname="@{hostname}" username="@{username}" key="@{key}" passphrase="@{passphrase}"/>
-        <ssh-command file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" hostname="${ssh.hostname}"
-                          username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
+    <target name="extract-scripts"  description="extracts release scripts tarball">
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; rm *.sh; tar xvf ${scripts.tar}; chmod +x *.sh;"
+                     hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
     </target>
 
 </project>

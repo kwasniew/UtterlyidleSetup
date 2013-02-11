@@ -13,19 +13,7 @@
         <attribute name="property" default="" description="Property in which to store return value"/>
         <attribute name="failOnError" default="true" description="Fail on error, true by default"/>
         <sequential>
-            <trycatch property="@{command}.@{hostname}.@{username}.@{property}.exception">
-                <try>
-                    <sshexec host="@{hostname}" username="@{username}" keyfile="@{key}" passphrase="@{passphrase}" command="@{command}" trust="true" failOnError="@{failOnError}" outputProperty="@{property}"/>
-                </try>
-                <catch>
-                    <fail message="Could not authenticate '@{username}' connecting to '@{hostname}' using private key '@{key}'">
-                        <condition>
-                            <equals arg1="${@{command}.@{hostname}.@{username}.@{property}.exception}" arg2="com.jcraft.jsch.JSchException: Auth cancel"/>
-                        </condition>
-                    </fail>
-                    <fail message="${@{command}.@{hostname}.@{username}.@{property}.exception}"/>
-                </catch>
-            </trycatch>
+            <sshexec host="@{hostname}" username="@{username}" keyfile="@{key}" passphrase="@{passphrase}" command="@{command}" trust="true" failOnError="@{failOnError}" outputProperty="@{property}"/>
         </sequential>
     </macrodef>
 
