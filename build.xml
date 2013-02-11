@@ -128,7 +128,7 @@
     </target>
 
     <target name="extract-app"  description="extracts app tarball">
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; tar xvf ${release.tar}; rm ${release.tar}"
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; mkdir -p ${build.number} &amp;&amp; cd ${build.number} &amp;&amp; tar xvf ../${release.tar} &amp;&amp; rm ../${release.tar}"
                      hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
     </target>
 
