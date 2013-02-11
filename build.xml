@@ -128,7 +128,7 @@
     </target>
 
     <target name="extract-app"  description="extracts app tarball">
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; mkdir -p ${build.number} &amp;&amp; cd ${build.number} &amp;&amp; tar xvf ../${release.tar} &amp;&amp; rm ../${release.tar}"
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; mkdir -p ${build.number} &amp;&amp; cd ${build.number} &amp;&amp; tar xvf ../${release.tar}"
                      hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
     </target>
 
@@ -165,6 +165,13 @@
     <target name="extract-all" description="extracts app and scripts">
         <antcall target="extract-app"/>
         <antcall target="extract-scripts"/>
+    </target>
+
+    <target name="release" description="releases deployed app">
+        <antcall target="extract-all"/>
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; rm previous; ln -s $(readlink current) previous; rm current; ln -s ${build.number} current;"
+                     hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
+
     </target>
 
 </project>
