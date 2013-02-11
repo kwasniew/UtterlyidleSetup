@@ -122,9 +122,14 @@
               src="${artifacts}/utterlyidle-setup-${build.number}.tar"/>
     </target>
 
-    <target name="deploy" description="deploys app tarball">
+    <target name="deploy-app" description="deploys app tarball">
         <ssh-copy-to-file file="${artifacts}/${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
                           username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
+    </target>
+
+    <target name="extract-app"  description="extracts app tarball">
+        <ssh-command command="cd ${ssh.toDir} &amp;&amp; tar xvf ${release.tar}; rm ${release.tar}"
+                     hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
     </target>
 
 
@@ -153,8 +158,13 @@
 
 
     <target name="deploy-all" description="deploys app and scripts">
-        <antcall target="deploy"/>
+        <antcall target="deploy-app"/>
         <antcall target="deploy-scripts"/>
+    </target>
+
+    <target name="extract-all" description="extracts app and scripts">
+        <antcall target="extract-app"/>
+        <antcall target="extract-scripts"/>
     </target>
 
 </project>
