@@ -151,5 +151,11 @@
                      hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
     </target>
 
+
+    <target name="deploy-all" description="deploys app and scripts">
+        <antcall target="deploy"/>
+        <antcall target="deploy-scripts"/>
+    </target>
+
 </project>
 
