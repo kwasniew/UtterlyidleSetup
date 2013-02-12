@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="utterlyidle-setup" default="build">
+<project name="utterlyidle-setup" default="build-jar">
 
     <property name="build.number" value="dev.build"/>
     <property name="build" value="${basedir}/build"/>
@@ -63,7 +63,7 @@
         <test jar="${test.jar.path}" classpathref="all.jars" reports="${reports}"/>
     </target>
 
-    <target name="package">
+    <target name="generate-properties">
         <mkdir dir="${artifacts}"/>
 
         <zip destfile="${artifacts}/${release.src}" basedir="src"/>
@@ -101,7 +101,7 @@
         <antcall target="compile"/>
         <parallel>
             <antcall target="test"/>
-            <antcall target="package"/>
+            <antcall target="generate-properties"/>
         </parallel>
     </target>
 
@@ -111,7 +111,7 @@
 
 
     <!-- APP -->
-    <target name="tarball" depends="build" description="creates tarball with the application jar and all dependencies jars">
+    <target name="package" depends="build" description="creates tarball with the application jar and all dependencies jars">
         <tar destfile="${artifacts}/utterlyidle-setup-${build.number}.tar">
             <tarfileset dir="${runtime.dependencies.dir}" />
             <tarfileset dir="${artifacts}">
@@ -157,18 +157,18 @@
     </target>
 
 
-    <target name="deploy-all" description="deploys app and scripts">
+    <target name="deploy" description="deploys app and scripts">
         <antcall target="deploy-app"/>
         <antcall target="deploy-scripts"/>
     </target>
 
-    <target name="extract-all" description="extracts app and scripts">
+    <target name="extract" description="extracts app and scripts">
         <antcall target="extract-app"/>
         <antcall target="extract-scripts"/>
     </target>
 
     <target name="release" description="releases deployed app">
-        <antcall target="extract-all"/>
+        <antcall target="extract"/>
         <ssh-command command="cd ${ssh.toDir} &amp;&amp; ./stop.sh; rm previous; ln -s $(readlink current) previous; rm current; ln -s ${build.number} current &amp;&amp; ./start.sh -v current -p ${ssh.port} &gt; log.out 2&gt; log.err &lt; /dev/null &amp;"
                      hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
 
