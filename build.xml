@@ -40,7 +40,7 @@
         <path path="${test.jar.path}"/>
     </path>
 
-    <target name="update" description="Updates library dependencies">
+    <target name="update" description="updates library dependencies">
         <parallel>
             <update dependencies="${build}/dependencies/build.dependencies"
                     directory="${build.dependencies.dir}"/>
@@ -63,7 +63,7 @@
         <test jar="${test.jar.path}" classpathref="all.jars" reports="${reports}"/>
     </target>
 
-    <target name="generate-properties">
+    <target name="generate-artifacts">
         <mkdir dir="${artifacts}"/>
 
         <zip destfile="${artifacts}/${release.src}" basedir="src"/>
@@ -93,7 +93,7 @@
 
     </target>
 
-    <target name="build" description="build this app">
+    <target name="build" description="build this app (update, clean, compile, test and generate artifacts)">
         <parallel>
             <antcall target="update"/>
             <antcall target="clean"/>
@@ -101,7 +101,7 @@
         <antcall target="compile"/>
         <parallel>
             <antcall target="test"/>
-            <antcall target="generate-properties"/>
+            <antcall target="generate-artifacts"/>
         </parallel>
     </target>
 
@@ -168,12 +168,12 @@
     </target>
 
 
-    <target name="deploy" description="deploys app and scripts">
+    <target name="deploy" description="deploys app tarball and release scripts">
         <antcall target="deploy-app"/>
         <antcall target="deploy-scripts"/>
     </target>
 
-    <target name="extract" description="extracts app and scripts">
+    <target name="extract" description="extracts app tarball and scripts tarball">
         <antcall target="extract-app"/>
         <antcall target="extract-scripts"/>
     </target>
