@@ -34,4 +34,4 @@ rm previous
 ln -s $(readlink temp) previous
 rm temp
 echo starting application at port $portNumber
-./start.sh -p $portNumber -v current -d ../db
+./start.sh -p $portNumber -v current
