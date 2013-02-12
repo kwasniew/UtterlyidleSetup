@@ -110,6 +110,22 @@
     </target>
 
 
+    <macrodef name="ssh-command-with-credentials">
+        <attribute name="command" />
+        <sequential>
+            <ssh-command command="@{command}" hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="ssh-copy-to-file-with-credentials">
+        <attribute name="file" />
+        <attribute name="toDir" />
+        <attribute name="toFilename" />
+        <sequential>
+            <ssh-copy-to-file file="@{file}" toDir="@{toDir}" toFilename="@{toFilename}" hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
+        </sequential>
+    </macrodef>
+
     <!-- APP -->
     <target name="package" depends="build" description="creates tarball with the application jar and all dependencies jars">
         <tar destfile="${artifacts}/utterlyidle-setup-${build.number}.tar">
@@ -123,15 +139,12 @@
     </target>
 
     <target name="deploy-app" description="deploys app tarball">
-        <ssh-copy-to-file file="${artifacts}/${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}" hostname="${ssh.hostname}"
-                          username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
+        <ssh-copy-to-file-with-credentials file="${artifacts}/${release.tar}" toDir="${ssh.toDir}" toFilename="${release.tar}"  />
     </target>
 
     <target name="extract-app"  description="extracts app tarball">
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; mkdir -p ${build.number} &amp;&amp; cd ${build.number} &amp;&amp; tar xvf ../${release.tar}"
-                     hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
+        <ssh-command-with-credentials command="cd ${ssh.toDir} &amp;&amp; mkdir -p ${build.number} &amp;&amp; cd ${build.number} &amp;&amp; tar xvf ../${release.tar}"/>
     </target>
-
 
     <!-- SCRIPTS -->
     <target name="package-scripts" description="creates a tarball package with release scripts">
@@ -147,13 +160,11 @@
     </target>
 
     <target name="deploy-scripts" depends="package-scripts" description="deploys release scripts tarball">
-        <ssh-copy-to-file file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" hostname="${ssh.hostname}"
-                          username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}" />
+        <ssh-copy-to-file-with-credentials file="${artifacts}/${scripts.tar}" toDir="${ssh.toDir}" toFilename="${scripts.tar}" />
     </target>
 
     <target name="extract-scripts"  description="extracts release scripts tarball">
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; rm *.sh; tar xvf ${scripts.tar}; chmod +x *.sh;"
-                     hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
+        <ssh-command-with-credentials command="cd ${ssh.toDir} &amp;&amp; rm *.sh; tar xvf ${scripts.tar}; chmod +x *.sh;"/>
     </target>
 
 
@@ -169,9 +180,7 @@
 
     <target name="release" description="releases deployed app">
         <antcall target="extract"/>
-        <ssh-command command="cd ${ssh.toDir} &amp;&amp; ./stop.sh; rm previous; ln -s $(readlink current) previous; rm current; ln -s ${build.number} current &amp;&amp; ./start.sh -v current -p ${ssh.port} &gt; log.out 2&gt; log.err &lt; /dev/null &amp;"
-                     hostname="${ssh.hostname}" username="${ssh.username}" key="${ssh.key}" passphrase="${ssh.passphrase}"/>
-
+        <ssh-command-with-credentials command="cd ${ssh.toDir} &amp;&amp; ./stop.sh; rm previous; ln -s $(readlink current) previous; rm current; ln -s ${build.number} current &amp;&amp; ./start.sh -v current -p ${ssh.port} &gt; log.out 2&gt; log.err &lt; /dev/null &amp;"/>
     </target>
 
     <target name="click" description="one click deployment">
