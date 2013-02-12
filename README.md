@@ -4,7 +4,7 @@ UtterlyidleSetup
 Utterlyidle (http://code.google.com/p/utterlyidle/wiki/GettingStarted) based project template used to kickstart new projects.
 
 
-Usage
+Getting started
 --------
 
 Prerequisites: Java 1.6, ant
@@ -64,5 +64,5 @@ different stages of your deployment pipeline) you can invoke the following seque
 `ant -Dbuild.number=100 -Dbuild.properties=build/environments/build.dev.properties deploy`  
 `ant -Dbuild.number=100 -Dbuild.properties=build/environments/build.dev.properties release`  
 
-To rollback to a previous version:
+To rollback to a previous version:  
 `ant -Dbuild.properties=build/environments/build.dev.properties rollback`
