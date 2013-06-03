@@ -9,7 +9,7 @@ Getting started
 
 Prerequisites: Java 1.6, ant
 
-1.  git clone --recursively _repo_url_
+1.  git clone --recursive _repo_url_
 2.  cd UtterlyidleSetup
 3.  ant (builds the app)
 4.  ant run (runs the app using a default port of 8181)
